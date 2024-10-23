@@ -285,7 +285,7 @@ class OurGroceries():
         return await self._post(ACTION_ITEM_CHANGE_VALUE, other_payload)
 
     async def _post(self, command, other_payload=None):
-        """Post a command to the API."""
+        """Post a command to the API. Raises an exception if the request failed."""
         if not self._session_key:
             await self.login()
 
@@ -299,5 +299,5 @@ class OurGroceries():
             payload = {**payload, **other_payload}
 
         async with aiohttp.ClientSession(cookies=cookies) as session:
-            async with session.post(YOUR_LISTS, json=payload) as resp:
+            async with session.post(YOUR_LISTS, json=payload, raise_for_status=True) as resp:
                 return await resp.json()
